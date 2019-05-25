@@ -1,4 +1,4 @@
-package com.mgalperina.swoosh.utils;
+package com.mgalperina.swoosh.Utilities;
 
 import androidx.test.espresso.IdlingResource;
 import java.util.concurrent.atomic.AtomicInteger;
