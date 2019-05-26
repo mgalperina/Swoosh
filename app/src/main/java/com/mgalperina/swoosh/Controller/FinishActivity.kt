@@ -6,13 +6,16 @@ import com.mgalperina.swoosh.Model.Player
 import com.mgalperina.swoosh.R
 import com.mgalperina.swoosh.Utilities.EXTRA_PLAYER
 import com.mgalperina.swoosh.Utilities.CountingIdlingResourceService
+import com.mgalperina.swoosh.Utilities.FINISH_ACTIVITY_IDLING_RESOURCE
+import com.mgalperina.swoosh.services.ApiService
+import com.mgalperina.swoosh.services.SimpleApiService
 
 import kotlinx.android.synthetic.main.activity_finish.*
-
-const val IDLING_RESOURCE = "finish_activity"
+import rx.android.schedulers.AndroidSchedulers
 
 class FinishActivity : AppCompatActivity() {
-    private val idlingResourceService = CountingIdlingResourceService()
+    private val _idlingResourceService = CountingIdlingResourceService()
+    private val _apiService: ApiService = SimpleApiService()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -22,13 +25,18 @@ class FinishActivity : AppCompatActivity() {
 
         searchLeaguesText.text = "Looking for ${player.league} ${player.skill} league near you ..."
 
-        idlingResourceService.increment(IDLING_RESOURCE)
+        _idlingResourceService.increment(FINISH_ACTIVITY_IDLING_RESOURCE)
         runOnUiThread {
-            // apiService.findUsers()
-            idlingResourceService.decrement(IDLING_RESOURCE)
+            _apiService
+                .getUsers()
+                .doOnNext {
+
+                }
+                .doOnCompleted{ _idlingResourceService.decrement(FINISH_ACTIVITY_IDLING_RESOURCE)}
 
 
-            JsonObjectRequest
+
+
         }
     }
 }
