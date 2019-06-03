@@ -3,31 +3,32 @@ package com.mgalperina.swoosh.services
 import com.mgalperina.swoosh.Model.User
 import com.mgalperina.swoosh.api.JsonPlaceHolderService
 import com.mgalperina.swoosh.api.JSON_PLACE_HOLDER_SERVICE_ENDPOINT
-import rx.Observable
-import retrofit.RestAdapter
-import rx.android.schedulers.AndroidSchedulers
-import rx.schedulers.Schedulers
+import io.reactivex.Observable
+import io.reactivex.android.schedulers.AndroidSchedulers
+import retrofit2.Retrofit
+import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
+import retrofit2.converter.gson.GsonConverterFactory
+import io.reactivex.schedulers.Schedulers
 
 class SimpleApiService: ApiService  {
+    private val baseUrl = JSON_PLACE_HOLDER_SERVICE_ENDPOINT
+    private val clazz = JsonPlaceHolderService::class.java
 
-    //val restAdapters = kotlin.collections.MutableList(0, 0)
-
-    fun <T> createRetrofitService(clazz: Class<T>, endPoint: String): T {
-        val restAdapter = RestAdapter.Builder()
-            .setEndpoint(endPoint)
+    fun buildRetrofitFactory(): Retrofit {
+        return Retrofit
+            .Builder()
+            .baseUrl(baseUrl)
+            .addConverterFactory(GsonConverterFactory.create())
+            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
             .build()
-
-        return restAdapter.create(clazz)
     }
 
-    override fun getUsers(): Observable<Array<User>> {
-        val service = createRetrofitService(
-            JsonPlaceHolderService::class.java,
-            JSON_PLACE_HOLDER_SERVICE_ENDPOINT)
+    override fun getUsers(): Observable<List<User>> {
+        val service = buildRetrofitFactory().create(clazz)
 
         return service.getUsers()
-                .subscribeOn(Schedulers.newThread())
-                .observeOn(AndroidSchedulers.mainThread())
-
+            .subscribeOn(Schedulers.io())
+            .unsubscribeOn(Schedulers.computation())
+            .observeOn(AndroidSchedulers.mainThread())
     }
 }

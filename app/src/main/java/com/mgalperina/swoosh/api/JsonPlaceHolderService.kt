@@ -1,14 +1,13 @@
 package com.mgalperina.swoosh.api
 
 import com.mgalperina.swoosh.Model.User
-import retrofit.http.GET
-import retrofit.http.Path
-import rx.Observable
+import retrofit2.http.GET
+import io.reactivex.Observable
 
-const val JSON_PLACE_HOLDER_SERVICE_ENDPOINT = "https://api.github.com"
+const val JSON_PLACE_HOLDER_SERVICE_ENDPOINT = "https://jsonplaceholder.typicode.com"
 
 interface JsonPlaceHolderService {
 
-    @GET("/users/{login}")
-    fun getUsers(): Observable<Array<User>>
+    @GET("/users")
+    fun getUsers(): Observable<List<User>>
 }
