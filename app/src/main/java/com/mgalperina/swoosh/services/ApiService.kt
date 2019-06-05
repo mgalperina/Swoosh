@@ -1,8 +1,8 @@
 package com.mgalperina.swoosh.services
 
 import com.mgalperina.swoosh.Model.User
-import rx.Observable
+import io.reactivex.Observable
 
 interface ApiService {
-    fun getUsers(): Observable<Array<User>>
+    fun getUsers(): Observable<List<User>>
 }

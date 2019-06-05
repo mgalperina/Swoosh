@@ -1,12 +1,12 @@
 package com.mgalperina.swoosh.Controller
 
 import android.content.Intent
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Parcelable
 import android.os.PersistableBundle
 import android.view.View
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import com.mgalperina.swoosh.Model.Player
 import com.mgalperina.swoosh.R
 import com.mgalperina.swoosh.Utilities.EXTRA_PLAYER
