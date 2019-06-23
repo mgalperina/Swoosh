@@ -14,11 +14,7 @@ object CountingIdlingResourceService {
     }
 
     fun decrement(key: String) {
-        val resource = get(key)
-
-        if(resource.isIdleNow()) {
-            resource.decrement()
-        }
+        get(key).decrement()
     }
 }
 
