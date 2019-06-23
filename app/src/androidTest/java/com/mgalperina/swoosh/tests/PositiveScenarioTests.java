@@ -1,4 +1,4 @@
-package com.mgalperina.swoosh.Tests;
+package com.mgalperina.swoosh.tests;
 
 
 import androidx.test.espresso.matcher.ViewMatchers;

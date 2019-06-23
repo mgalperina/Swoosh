@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.mgalperina.swoosh.Model.Player
 import com.mgalperina.swoosh.Model.User
 import com.mgalperina.swoosh.R
+import com.mgalperina.swoosh.SwooshApplication
 import com.mgalperina.swoosh.Utilities.CountingIdlingResourceService
 import com.mgalperina.swoosh.Utilities.EXTRA_PLAYER
 import com.mgalperina.swoosh.Utilities.FINISH_ACTIVITY_IDLING_RESOURCE
@@ -18,10 +19,13 @@ import com.mgalperina.swoosh.services.SimpleApiService
 import kotlinx.android.synthetic.main.activity_finish.*
 import kotlinx.android.synthetic.main.item_user_layout.*
 import kotlinx.android.synthetic.main.item_user_layout.view.*
+import javax.inject.Inject
 
 class FinishActivity : AppCompatActivity() {
+
+    @Inject lateinit var _apiService: ApiService
+
     private val _idlingResourceService = CountingIdlingResourceService()
-    private val _apiService: ApiService = SimpleApiService()
     private lateinit var _usersAdapter: UserAdapter
     private lateinit var _userList: RecyclerView
 
@@ -30,25 +34,42 @@ class FinishActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_finish)
 
+        (application as SwooshApplication).appComponent.inject(this)
+
         _userList = findViewById(R.id.user_list)
         _usersAdapter = UserAdapter()
         _userList.adapter = _usersAdapter
 
-        val player = intent.getParcelableExtra<Player>(EXTRA_PLAYER)
+        setSearchVisualCues()
 
-        searchLeaguesText.text = "Looking for ${player.league} ${player.skill} league near you ..."
+        startSearch()
 
+    }
+
+    private fun setSearchVisualCues() {
+        val player = intent
+            .getParcelableExtra<Player>(EXTRA_PLAYER)
+
+        searchLeaguesText.text =
+            "Looking for ${player.league} ${player.skill} league near you ..."
+    }
+
+    private fun startSearch() {
         _idlingResourceService.increment(FINISH_ACTIVITY_IDLING_RESOURCE)
         _apiService
             .getUsers()
             .subscribe({
-                _usersAdapter.setUsers(it)
-                this.searchLeaguesText.visibility = View.GONE
-                this.progressBar.visibility = View.GONE
+                showResults(it)
+                _idlingResourceService.decrement(FINISH_ACTIVITY_IDLING_RESOURCE)
             }, {
                 Toast.makeText(applicationContext, it.message, Toast.LENGTH_SHORT)
             })
+    }
 
+    private fun showResults(it: List<User>) {
+        _usersAdapter.setUsers(it)
+        this.searchLeaguesText.visibility = View.GONE
+        this.progressBar.visibility = View.GONE
     }
 
 
