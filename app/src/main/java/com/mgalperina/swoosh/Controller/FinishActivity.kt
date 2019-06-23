@@ -25,7 +25,6 @@ class FinishActivity : AppCompatActivity() {
 
     @Inject lateinit var _apiService: ApiService
 
-    private val _idlingResourceService = CountingIdlingResourceService()
     private lateinit var _usersAdapter: UserAdapter
     private lateinit var _userList: RecyclerView
 
@@ -55,12 +54,12 @@ class FinishActivity : AppCompatActivity() {
     }
 
     private fun startSearch() {
-        _idlingResourceService.increment(FINISH_ACTIVITY_IDLING_RESOURCE)
+        CountingIdlingResourceService.increment(FINISH_ACTIVITY_IDLING_RESOURCE)
         _apiService
             .getUsers()
             .subscribe({
                 showResults(it)
-                _idlingResourceService.decrement(FINISH_ACTIVITY_IDLING_RESOURCE)
+                CountingIdlingResourceService.decrement(FINISH_ACTIVITY_IDLING_RESOURCE)
             }, {
                 Toast.makeText(applicationContext, it.message, Toast.LENGTH_SHORT)
             })

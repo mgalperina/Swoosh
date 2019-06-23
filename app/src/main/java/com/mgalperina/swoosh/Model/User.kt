@@ -2,7 +2,7 @@ package com.mgalperina.swoosh.Model
 import com.google.gson.annotations.SerializedName
 
 
-data class User(
+open class User(
     @SerializedName("address")
     val address: Address,
     @SerializedName("company")

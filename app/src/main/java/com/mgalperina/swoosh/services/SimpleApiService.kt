@@ -10,7 +10,7 @@ import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import io.reactivex.schedulers.Schedulers
 
-class SimpleApiService: ApiService  {
+open class SimpleApiService: ApiService  {
     private val baseUrl = JSON_PLACE_HOLDER_SERVICE_ENDPOINT
     private val clazz = JsonPlaceHolderService::class.java
 

@@ -1,10 +1,12 @@
 package com.mgalperina.swoosh.Utilities
 
-class CountingIdlingResourceService {
-    private val _counters = mutableMapOf<String, SimpleCountingIdlingResource>()
+object CountingIdlingResourceService {
+    private val mCounters =
+        mutableMapOf<String, SimpleCountingIdlingResource>()
 
+    @JvmStatic
     fun get(key: String): SimpleCountingIdlingResource {
-        return _counters.getOrPut(key, { SimpleCountingIdlingResource(key) })
+        return mCounters.getOrPut(key, { SimpleCountingIdlingResource(key) })
     }
 
     fun increment(key: String) {
@@ -12,7 +14,11 @@ class CountingIdlingResourceService {
     }
 
     fun decrement(key: String) {
-        get(key).decrement()
+        val resource = get(key)
+
+        if(resource.isIdleNow()) {
+            resource.decrement()
+        }
     }
 }
 
