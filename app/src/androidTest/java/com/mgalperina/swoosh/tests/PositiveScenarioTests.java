@@ -49,7 +49,7 @@ public class PositiveScenarioTests {
         onView(withId(R.id.leagueNextButton)).perform(click());
         onView(withId(R.id.ballerClickBtn)).perform(click());
         onView(withId(R.id.skillFinishBtn)).perform(click());
-       // onView(withId(R.id.searchLeaguesText)).check(matches(isDisplayed()));
+        onView(withId(R.id.user_list)).check(matches(isDisplayed()));
 
     }
 
